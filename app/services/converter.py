@@ -5,9 +5,12 @@ from aio_pika import IncomingMessage
 from aiomisc import threaded
 
 from app.models import Call
-from app.settings import MQ_CONVERTER_QUEUE_NAME, DATA_PATH, logger
+from app.settings import MQ_CONVERTER_QUEUE_NAME, DATA_PATH
+from app.utils.logging import get_logger
 from app.utils.rabbit import need_upload
 from .base import BaseQueueService
+
+logger = get_logger('root')
 
 
 @threaded

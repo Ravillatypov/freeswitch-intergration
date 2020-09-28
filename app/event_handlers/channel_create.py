@@ -3,8 +3,10 @@ from datetime import datetime
 from app.misc.consts import CallType, CallState
 from app.misc.types import FSEvent
 from app.models import Call, VATSClient
-from app.settings import logger
 from app.utils.events import is_external, is_internal
+from app.utils.logging import get_logger
+
+logger = get_logger('root')
 
 
 async def channel_create(event: FSEvent, *args, **kwargs):

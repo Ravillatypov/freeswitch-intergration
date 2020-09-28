@@ -3,7 +3,10 @@ from hashlib import md5
 from aiohttp import ClientSession
 
 from app.models import Call
-from app.settings import TELEPHONY_URL, logger
+from app.settings import TELEPHONY_URL
+from app.utils.logging import get_logger
+
+logger = get_logger('root')
 
 try:
     import ujson as json

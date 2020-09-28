@@ -6,8 +6,11 @@ from aiomisc.io import async_open
 
 from app.misc.s3client import S3Client
 from app.models import Call
-from app.settings import MQ_UPLOADS_QUEUE_NAME, logger
+from app.settings import MQ_UPLOADS_QUEUE_NAME
+from app.utils.logging import get_logger
 from .base import BaseQueueService
+
+logger = get_logger('root')
 
 
 @threaded

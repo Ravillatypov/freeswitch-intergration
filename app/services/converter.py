@@ -50,4 +50,4 @@ class ConvertService(BaseQueueService):
                 logger.warning(f'Record not converted. File: {source}')
                 return
 
-            await need_upload(self.context['rabbit_mq'], call_id, destination)
+            await need_upload(self.rabbit_mq, call_id, destination)

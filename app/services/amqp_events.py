@@ -17,7 +17,7 @@ class AMQPService(BaseQueueService):
         async with message.process():
             try:
                 event = FSEvent(message.body)
-                await process_event(event, self.context['rabbit_mq'])
+                await process_event(event, self.rabbit_mq)
             except Exception as e:
                 logger.warning(f'Exception on process event: {e}')
                 mq_log.warning(message.body.decode())

@@ -11,8 +11,12 @@ class S3Client:
     client = None
     endpoint_url = 'https://storage.yandexcloud.net'
 
-    def __init__(self, bucket_name, folder_name):
-        self.session = boto3.session.Session()
+    def __init__(self, bucket_name, folder_name, access_key_id, access_key, region_name):
+        self.session = boto3.session.Session(
+            aws_access_key_id=access_key_id,
+            aws_secret_access_key=access_key,
+            region_name=region_name
+        )
         self.client = self.session.client(
             service_name='s3',
             endpoint_url=self.endpoint_url

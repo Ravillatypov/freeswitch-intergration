@@ -25,5 +25,6 @@ S3_FOLDER_NAME = env.str('S3_FOLDER_NAME', default='audios')
 S3_BUCKET_NAME = env.str('S3_BUCKET_NAME', default='mdo-appeals')
 
 DATA_PATH = env.str('DATA_PATH', default='/data')
+RECORDS_PATH_PREFIX = env.str('RECORDS_PATH_PREFIX', default='/var/lib/freeswitch/recordings')
 
 LOG_LEVEL = env.str('LOG_LEVEL', default='WARNING').upper()

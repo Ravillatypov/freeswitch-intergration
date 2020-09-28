@@ -5,7 +5,7 @@ from aio_pika import IncomingMessage
 from aiomisc import threaded
 
 from app.models import Call
-from app.settings import MQ_CONVERTER_QUEUE_NAME, DATA_PATH
+from app.settings import MQ_CONVERTER_QUEUE_NAME, DATA_PATH, RECORDS_PATH_PREFIX
 from app.utils.logging import get_logger
 from app.utils.rabbit import need_upload
 from .base import BaseQueueService
@@ -36,7 +36,7 @@ class ConvertService(BaseQueueService):
                 logger.warning(f'Bad call_id: {call_id}. Call not found')
                 return
 
-            source = f'{DATA_PATH}/fs_records{path}'
+            source = path.replace(RECORDS_PATH_PREFIX, f'{DATA_PATH}/fs_records')
             destination = f'{DATA_PATH}/converted_records/{call_id}.mp3'
 
             if not Path(source).exists():

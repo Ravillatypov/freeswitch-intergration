@@ -1,10 +1,26 @@
 from datetime import datetime
-from typing import List
+from typing import List, Iterable
 
 from tortoise import fields
 from tortoise.models import Model
 
+from .call import Call
 from .company import Company
+
+
+def match_numbers(external_numbers: Iterable, *args) -> bool:
+    for ext_num in external_numbers:
+        ext_num_len = len(ext_num)
+        for arg in args:
+            if not isinstance(arg, str):
+                continue
+            arg = arg.replace('+', '').split(':')[-1].split('@')[0][-10:]
+            arg_len = len(arg)
+            if any((arg_len > 5 and arg == ext_num[-arg_len:],
+                    arg == ext_num,
+                    ext_num_len > 5 and arg[-ext_num_len:] == ext_num)):
+                return True
+    return False
 
 
 class VATSClient(Model):
@@ -32,3 +48,44 @@ class VATSClient(Model):
 
     class Meta:
         table = 'vats'
+
+    def call_is_hidden(self, call_data: Call) -> bool:
+        if not self.blacklist:
+            return False
+
+        user1 = call_data.from_user
+        user2 = call_data.request_user
+        pin1 = call_data.from_pin
+        pin2 = call_data.request_pin
+        num1 = call_data.from_number
+        num2 = call_data.request_number
+
+        matched = any(
+            (
+                user1 and user1 in self.username_list,
+                user2 and user2 in self.username_list,
+                pin1 and pin1 in self.internal_numbers,
+                pin2 and pin2 in self.internal_numbers,
+            )
+        )
+        if not matched:
+            matched = match_numbers(self.external_numbers, num1, num2)
+        if not matched:
+            matched = match_numbers(self.blacklist, user1, user2, num1, num2)
+        if self.is_blacklist:
+            return matched
+        return not matched
+
+    @property
+    def external_numbers(self):
+        return [i for i in self.blacklist if len(i) > 5]
+
+    @property
+    def username_list(self):
+        res = []
+        for i in self.blacklist:
+            try:
+                int(i)
+            except Exception:
+                res.append(i)
+        return res

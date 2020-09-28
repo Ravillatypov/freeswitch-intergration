@@ -20,7 +20,7 @@ class S3Client:
         self.bucket_name = bucket_name
         self.folder_name = folder_name
 
-    def upload(self, filename: str, content: bytes):
+    def upload(self, filename: str, content: bytes) -> str:
         """
         Upload a file to S3
 
@@ -49,4 +49,4 @@ class S3Client:
         if resp.get('ETag', '') != f'"{f_hash}"' or info.get('ContentLength', 0) == 0:
             raise RuntimeError(f"File \"{filename}\" wasn't uploaded")
 
-        return resp
+        return f'{self.endpoint_url}/{self.bucket_name}/{self.folder_name}/{dst_path}/{filename}'

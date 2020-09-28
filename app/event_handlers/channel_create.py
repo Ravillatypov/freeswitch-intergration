@@ -10,7 +10,7 @@ logger = get_logger('root')
 
 
 async def channel_create(event: FSEvent, *args, **kwargs):
-    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='FS')
+    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='MDO')
 
     if call:
         return
@@ -40,9 +40,9 @@ async def channel_create(event: FSEvent, *args, **kwargs):
         from_num, from_pin, request_num, request_pin = from_, from_, to, to
         call_type = CallType.not_defined
 
-    await Call.create(
+    call = Call(
         operator_session_id=event.call_uuid,
-        operator='FS',
+        operator='MDO',
         from_number=from_num,
         request_number=request_num,
         state=CallState.new,
@@ -52,3 +52,7 @@ async def channel_create(event: FSEvent, *args, **kwargs):
         request_pin=request_pin,
         call_type=call_type,
     )
+
+    call.is_hidden = vats.call_is_hidden(call)
+
+    await call.save()

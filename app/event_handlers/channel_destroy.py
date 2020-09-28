@@ -9,7 +9,7 @@ async def channel_destroy(event: FSEvent, *args, **kwargs):
     if event.call_uuid != event.get('Unique-ID'):
         return
 
-    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='FS')
+    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='MDO')
 
     if not call:
         return

@@ -18,7 +18,7 @@ async def send_event(call: Call):
     call_str = f'{call.id}{call.call_type}{call.state}'.encode()
     hash_ = md5(call_str).hexdigest()
     data = {
-        'id': call.id,
+        'id': f'{call.id}',
         'call_type': call.call_type,
         'state': call.state,
         'sign': hash_,

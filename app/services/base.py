@@ -13,6 +13,7 @@ class BaseQueueService(Service):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.rabbit_mq = None
+        self.s3client = None
 
     async def start(self):
         for _ in range(100):
@@ -24,6 +25,8 @@ class BaseQueueService(Service):
         self.rabbit_mq = await self.context['rabbit_mq']
         if not isinstance(self.rabbit_mq, RobustConnection):
             raise RabbitMQNotConnected
+
+        self.s3client = await self.context['s3client']
 
         async with self.rabbit_mq:
             channel = await self.rabbit_mq.channel()

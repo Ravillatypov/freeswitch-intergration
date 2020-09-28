@@ -4,7 +4,7 @@ from app.utils.rabbit import need_convert
 
 
 async def record_stop(event: FSEvent, rabbit_mq, *args, **kwargs):
-    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='FS')
+    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='MDO')
 
     if not call:
         return

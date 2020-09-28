@@ -14,7 +14,7 @@ if SENTRY_DSN:
 DB_DSN = env.str('DB_DSN')
 DEV = env.bool('DEV', default=True)
 __dev = 'dev.' if DEV else ''
-TELEPHONY_URL = f'https://telephony.{__dev}moydomonline.ru/api/v1/telehony/freeswitch/call_events/'
+TELEPHONY_URL = f'https://telephony.{__dev}moydomonline.ru/api/v1/telephony/freeswitch/call_events/'
 
 MQ_DSN = env.str('MQ_DSN')
 MQ_EVENTS_QUEUE_NAME = env.str('MQ_EVENTS_QUEUE_NAME', default='fs_events')

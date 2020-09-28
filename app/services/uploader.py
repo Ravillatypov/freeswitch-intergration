@@ -1,0 +1,44 @@
+from pathlib import Path
+
+from aio_pika import IncomingMessage
+from aiomisc import threaded
+from aiomisc.io import async_open
+
+from app.misc.s3client import S3Client
+from app.models import Call
+from app.settings import MQ_UPLOADS_QUEUE_NAME, logger
+from .base import BaseQueueService
+
+
+@threaded
+def upload_record(s3client: S3Client, content: bytes, filename: str):
+    try:
+        s3client.upload(filename, content)
+    except Exception as err:
+        logger.warning(f'{err}')
+
+
+class UploadService(BaseQueueService):
+    queue_name = MQ_UPLOADS_QUEUE_NAME
+
+    async def process(self, message: IncomingMessage):
+        async with message.process():
+            call_id, path = message.body.decode().splitlines()
+
+            call = await Call.get_or_none(id=call_id)
+            if not call:
+                logger.warning(f'Bad call_id: {call_id}. Call not found')
+                return
+
+            if not Path(path).exists():
+                logger.warning(f'Converted record file not found. File: {path}')
+                return
+
+            async with async_open(path, 'rb') as f:
+                data = await f.read()
+
+            await upload_record(
+                self.context['s3client'],
+                data,
+                call.create_record_filename(),
+            )

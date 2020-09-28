@@ -1,0 +1,6 @@
+# ignore all
+*
+# excludes
+!app
+!green.py
+!requirements.txt

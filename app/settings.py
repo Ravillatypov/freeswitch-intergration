@@ -34,3 +34,5 @@ DATA_PATH = env.str('DATA_PATH', default='/data')
 RECORDS_PATH_PREFIX = env.str('RECORDS_PATH_PREFIX', default='/var/lib/freeswitch/recordings')
 
 LOG_LEVEL = env.str('LOG_LEVEL', default='WARNING').upper()
+
+EVENT_CAPTURE = env.bool('EVENT_CAPTURE', default=False)

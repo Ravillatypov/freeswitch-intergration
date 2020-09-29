@@ -1,6 +1,7 @@
 from logging import Logger
 from logging.handlers import TimedRotatingFileHandler
 from aiomisc.log import JSONLogFormatter
+from aiomisc.io import async_open
 
 from app.settings import LOG_LEVEL, DATA_PATH
 
@@ -20,3 +21,8 @@ def get_logger(name: str) -> Logger:
     logger.addHandler(handler)
 
     return logger
+
+
+async def capture_message(msg: str):
+    async with async_open(f'{DATA_PATH}/logs/messages.txt', 'a') as f:
+        await f.write(msg)

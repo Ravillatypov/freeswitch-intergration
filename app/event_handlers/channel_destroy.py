@@ -9,7 +9,7 @@ logger = get_logger('root')
 
 
 async def channel_destroy(event: FSEvent, *args, **kwargs):
-    call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='MDO')
+    call = await Call.get_or_none(operator_session_id__in=event.call_uuid_list, operator='MDO')
 
     if not call:
         logger.warning(f'Call not found: uuid: {event.call_uuid}')

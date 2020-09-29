@@ -29,12 +29,32 @@ class FSEvent:
                 return key
 
     @property
-    def timestamp(self) -> int:
-        return int(self.__event.get('Event-Date-Timestamp'))
+    def vats_id(self) -> int:
+        context: str = self.__event.get('Caller-Context')
+        _, _, _, v_id, *_ = context.split('_')
+        return int(v_id)
 
     @property
-    def bridged_timestamp(self) -> int:
-        return int(self.__event.get('Caller-Channel-Bridged-Time'))
+    def company_id(self) -> int:
+        context: str = self.__event.get('Caller-Context')
+        _, c_id, *_ = context.split('_')
+        return int(c_id)
+
+    @property
+    def gateway(self) -> str:
+        for key in ('variable_sip_gateway_name', 'variable_default_gateway'):
+            gw = self.__event.get(key)
+            if gw:
+                return gw
+        return ''
+
+    @property
+    def timestamp(self) -> float:
+        return int(self.__event.get('Event-Date-Timestamp')) / 1_000_000
+
+    @property
+    def bridged_timestamp(self) -> float:
+        return int(self.__event.get('Caller-Channel-Bridged-Time')) / 1_000_000
 
     def get(self, key: str, default: Any = '') -> str:
         return self.__event.get(key, default)

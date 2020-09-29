@@ -3,15 +3,16 @@ from app.models import Call
 from app.misc.consts import CallState, CallType
 from datetime import datetime
 from math import ceil
+from app.utils.logging import get_logger
+
+logger = get_logger('root')
 
 
 async def channel_destroy(event: FSEvent, *args, **kwargs):
-    if event.call_uuid != event.get('Unique-ID'):
-        return
-
     call = await Call.get_or_none(operator_session_id=event.call_uuid, operator='MDO')
 
     if not call:
+        logger.warning(f'Call not found: uuid: {event.call_uuid}')
         return
 
     call.finished_at = datetime.fromtimestamp(event.timestamp)

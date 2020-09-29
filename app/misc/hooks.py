@@ -28,5 +28,6 @@ async def on_stop(entrypoint: Entrypoint, *args, **kwargs):
 
 
 @post_save(Call)
-async def telephony_hook(sender: Type[Call], instance: Call, using_db, update_fields):
-    await send_event(instance)
+async def telephony_hook(sender: Type[Call], instance: Call, created: bool, *args):
+    if not created:
+        await send_event(instance)

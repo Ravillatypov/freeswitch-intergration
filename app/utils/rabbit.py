@@ -2,11 +2,14 @@ from uuid import uuid4
 
 from aio_pika import Message
 
-from app.settings import MQ_CONVERTER_QUEUE_NAME, MQ_UPLOADS_QUEUE_NAME
+from app.settings import MQ_CONVERTER_QUEUE_NAME, MQ_UPLOADS_QUEUE_NAME, ENVIRONMENT
 from aio_pika import RobustConnection
 
 
 async def send_message(rabbit_mq: RobustConnection, routing_key: str, body: bytes):
+    if ENVIRONMENT == 'test':
+        return
+
     async with rabbit_mq:
         channel = await rabbit_mq.channel()
         await channel.default_exchange.publish(

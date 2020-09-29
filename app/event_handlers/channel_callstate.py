@@ -20,7 +20,7 @@ async def channel_call_state(event: FSEvent, *args, **kwargs):
     call.state = CallState.connected
     call.voice_started_at = datetime.fromtimestamp(event.bridged_timestamp)
 
-    vats = await VATSClient.get_or_none(company=call.company, operator='MDO')
+    vats = await VATSClient.get_or_none(company_id=call.company_id, operator='MDO')
     if vats:
         call.is_hidden = vats.call_is_hidden(call)
 

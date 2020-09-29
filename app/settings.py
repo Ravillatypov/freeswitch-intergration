@@ -6,14 +6,16 @@ from envparse import env
 if isfile('.env'):
     env.read_envfile('.env')
 
+ENVIRONMENT = env.str('ENVIRONMENT', default='local')
+
 SENTRY_DSN = env.str('SENTRY_DSN', default='')
 RELEASE = env.str('RELEASE', default='local')
 if SENTRY_DSN:
     sentry_sdk.init(SENTRY_DSN, release=RELEASE)
 
 DB_DSN = env.str('DB_DSN')
-DEV = env.bool('DEV', default=True)
-__dev = 'dev.' if DEV else ''
+
+__dev = 'dev.' if ENVIRONMENT != 'prod' else ''
 TELEPHONY_URL = f'https://telephony.{__dev}moydomonline.ru/api/v1/telephony/freeswitch/call_events/'
 
 MQ_DSN = env.str('MQ_DSN')

@@ -3,7 +3,7 @@ from hashlib import md5
 from aiohttp import ClientSession
 
 from app.models import Call
-from app.settings import TELEPHONY_URL
+from app.settings import TELEPHONY_URL, ENVIRONMENT
 from app.utils.logging import get_logger
 
 logger = get_logger('root')
@@ -15,6 +15,9 @@ except ImportError:
 
 
 async def send_event(call: Call):
+    if ENVIRONMENT == 'test':
+        return
+
     call_str = f'{call.id}{call.call_type}{call.state}'.encode()
     hash_ = md5(call_str).hexdigest()
     data = {

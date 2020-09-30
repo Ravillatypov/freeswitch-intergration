@@ -43,15 +43,23 @@ class FSEvent:
 
     @property
     def vats_id(self) -> int:
-        context: str = self.__event.get('Caller-Context')
-        _, _, _, v_id, *_ = context.split('_')
-        return int(v_id)
+        try:
+            context: str = self.__event.get('Caller-Context')
+            _, _, _, v_id, *_ = context.split('_')
+            return int(v_id)
+        except Exception:
+            pass
+        return 0
 
     @property
     def company_id(self) -> int:
-        context: str = self.__event.get('Caller-Context')
-        _, c_id, *_ = context.split('_')
-        return int(c_id)
+        try:
+            context: str = self.__event.get('Caller-Context')
+            _, c_id, *_ = context.split('_')
+            return int(c_id)
+        except Exception:
+            pass
+        return 0
 
     @property
     def gateway(self) -> str:

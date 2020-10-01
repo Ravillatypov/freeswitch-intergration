@@ -15,16 +15,14 @@ except ImportError:
 
 
 async def send_event(call: Call):
-    if ENVIRONMENT == 'test':
+    if ENVIRONMENT == 'test' or not TELEPHONY_URL:
         return
 
-    call_str = f'{call.id}{call.call_type}{call.state}'.encode()
-    hash_ = md5(call_str).hexdigest()
     data = {
         'id': f'{call.id}',
         'call_type': call.call_type,
         'state': call.state,
-        'sign': hash_,
+        'sign': call.sign,
     }
     async with ClientSession(json_serialize=json.dumps) as session:
         async with session.post(TELEPHONY_URL, json=data) as resp:

@@ -2,5 +2,6 @@
 *
 # excludes
 !app
-!green.py
+!tests
+!main.py
 !requirements.txt

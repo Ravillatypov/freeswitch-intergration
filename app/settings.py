@@ -1,7 +1,11 @@
 from os.path import isfile
 
-import sentry_sdk
 from envparse import env
+
+try:
+    import sentry_sdk
+except ImportError:
+    sentry_sdk = None
 
 if isfile('.env'):
     env.read_envfile('.env')
@@ -9,16 +13,15 @@ if isfile('.env'):
 ENVIRONMENT = env.str('ENVIRONMENT', default='local')
 
 SENTRY_DSN = env.str('SENTRY_DSN', default='')
-RELEASE = env.str('RELEASE', default='local')
-if SENTRY_DSN:
-    sentry_sdk.init(SENTRY_DSN, release=RELEASE)
+VERSION = env.str('VERSION', default='local')
+if SENTRY_DSN and sentry_sdk is not None:
+    sentry_sdk.init(SENTRY_DSN, release=VERSION)
 
-DB_DSN = env.str('DB_DSN')
+DB_DSN = env.str('DB_DSN', default='')
 
-__dev = 'dev.' if ENVIRONMENT != 'prod' else ''
-TELEPHONY_URL = f'https://telephony.{__dev}moydomonline.ru/api/v1/telephony/freeswitch/call_events/'
+TELEPHONY_URL = env.str('TELEPHONY_URL', default='')
 
-MQ_DSN = env.str('MQ_DSN')
+MQ_DSN = env.str('MQ_DSN', default='')
 MQ_EVENTS_QUEUE_NAME = env.str('MQ_EVENTS_QUEUE_NAME', default='fs_events')
 MQ_CONVERTER_QUEUE_NAME = env.str('MQ_CONVERTER_QUEUE_NAME', default='convert_tasks')
 MQ_UPLOADS_QUEUE_NAME = env.str('MQ_UPLOADS_QUEUE_NAME', default='upload_tasks')

@@ -3,7 +3,9 @@ FROM python:3.8-alpine
 WORKDIR /code
 
 CMD ["python", "main.py"]
-VOLUME /code/logs /data/fs_records /data/converted_records
+VOLUME /data/logs /data/fs_records /data/converted_records
+
+RUN apk --update --no-cache add postgresql-client libstdc++
 
 COPY requirements.txt /requirements.txt
 
@@ -14,3 +16,6 @@ RUN apk add --update --no-cache --virtual .tmp-build-deps \
     apk del .tmp-build-deps
 
 COPY . /code
+
+ARG VERSION
+ENV VERSION=$VERSION

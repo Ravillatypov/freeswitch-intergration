@@ -1,4 +1,5 @@
 from datetime import datetime
+from hashlib import md5
 from uuid import uuid4
 
 from tortoise import fields
@@ -52,6 +53,11 @@ class Call(Model):
 
     def create_record_filename(self):
         return str(self.id).replace('-', '') + '.mp3'
+
+    @property
+    def sign(self) -> str:
+        call_str = f'{self.id}{self.call_type}{self.state}'.encode()
+        return md5(call_str).hexdigest()
 
 
 class CallRecord(Model):

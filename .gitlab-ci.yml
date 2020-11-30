@@ -19,6 +19,11 @@ flake8:
     - flake8 .
 
 test:
+  cache:
+    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    paths:
+      - .pip
+  image: python:3.8-alpine
   variables:
     ENVIRONMENT: test
     DATA_PATH: .
@@ -35,7 +40,7 @@ build:
   stage: build
   when: manual
   script:
-    - docker build --pull --build-arg VERSION=$CI_BUILD_REF_NAME --build-arg COMMIT=$CI_COMMIT_SHORT_SHA -t $IMAGE .
+    - docker build --pull --cache-from $RELEASE_IMAGE --build-arg VERSION=$CI_BUILD_REF_NAME --build-arg COMMIT=$CI_COMMIT_SHORT_SHA -t $IMAGE .
     - docker push $IMAGE
     - docker tag $IMAGE $RELEASE_IMAGE
     - docker push $RELEASE_IMAGE

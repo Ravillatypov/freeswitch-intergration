@@ -38,7 +38,6 @@ test:
 
 build:
   stage: build
-  when: manual
   script:
     - docker build --pull --cache-from $RELEASE_IMAGE --build-arg VERSION=$CI_BUILD_REF_NAME --build-arg COMMIT=$CI_COMMIT_SHORT_SHA -t $IMAGE .
     - docker push $IMAGE

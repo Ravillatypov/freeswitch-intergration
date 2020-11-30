@@ -44,9 +44,8 @@ class FSEvent:
     @property
     def vats_id(self) -> int:
         try:
-            context: str = self.__event.get('Caller-Context')
-            _, _, _, v_id, *_ = context.split('_')
-            return int(v_id)
+            vats_id: str = self.__event.get('x-vats-id')
+            return int(vats_id)
         except Exception:
             pass
         return 0

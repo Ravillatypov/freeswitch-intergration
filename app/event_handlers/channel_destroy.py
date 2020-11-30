@@ -20,7 +20,7 @@ async def channel_destroy(event: FSEvent, *args, **kwargs):
 
     if call.voice_finished_at:
         call.state = CallState.end
-        delta = call.voice_finished_at - call.voice_started_at
+        delta = call.voice_finished_at - call.voice_started_at.replace(tzinfo=None)
         call.duration_sec = delta.total_seconds()
         call.duration_min = ceil(call.duration_sec / 60)
     elif call.call_type == CallType.incoming:

@@ -15,7 +15,7 @@ async def channel_create(event: FSEvent, *args, **kwargs):
     if call:
         return
 
-    vats = await VATSClient.get_or_none(id=event.vats_id)
+    vats: VATSClient = await VATSClient.get_or_none(id=event.vats_id)
     if not vats:
         logger.warning(f'VATS is not found. domain: {event.vats_id}')
         return
@@ -47,7 +47,7 @@ async def channel_create(event: FSEvent, *args, **kwargs):
         request_number=request_num,
         state=CallState.new,
         started_at=datetime.fromtimestamp(event.timestamp),
-        company_id=event.company_id,
+        company_id=vats.company_id,
         from_pin=from_pin,
         request_pin=request_pin,
         call_type=call_type,

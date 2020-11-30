@@ -1,5 +1,5 @@
-import uuid
 import re
+import uuid
 
 
 def is_number(num: str) -> bool:
@@ -42,4 +42,3 @@ def phone_number_normalize(phone_number: str) -> str:
         phone_number = m.group()
 
     return phone_number
-

@@ -1,0 +1,45 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+stages:
+  - linting
+  - test
+  - build
+
+variables:
+  IMAGE: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+  RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+flake8:
+  stage: linting
+  image: pipelinecomponents/flake8:latest
+  script:
+    - flake8 .
+
+test:
+  variables:
+    ENVIRONMENT: test
+    DATA_PATH: .
+  before_script:
+    - pip install -r requirements.txt
+    - pip install pytest
+    - mkdir logs
+  script: pytest -vvv
+  only:
+    - development
+    - main
+
+build:
+  stage: build
+  when: manual
+  script:
+    - docker build --pull --build-arg VERSION=$CI_BUILD_REF_NAME --build-arg COMMIT=$CI_COMMIT_SHORT_SHA -t $IMAGE .
+    - docker push $IMAGE
+    - docker tag $IMAGE $RELEASE_IMAGE
+    - docker push $RELEASE_IMAGE
+  before_script:
+    - echo $CI_REGISTRY_PASSWORD | docker login --password-stdin -u $CI_REGISTRY_USER $CI_REGISTRY
+  only:
+    - /^\d+\.\d+\.\d+$/

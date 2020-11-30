@@ -1,5 +1,3 @@
-from hashlib import md5
-
 from aiohttp import ClientSession
 
 from app.models import Call

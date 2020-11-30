@@ -15,7 +15,7 @@ ENVIRONMENT = env.str('ENVIRONMENT', default='local')
 SENTRY_DSN = env.str('SENTRY_DSN', default='')
 VERSION = env.str('VERSION', default='local')
 if SENTRY_DSN and sentry_sdk is not None:
-    sentry_sdk.init(SENTRY_DSN, release=VERSION)
+    sentry_sdk.init(SENTRY_DSN, release=env.str('COMMIT', default=VERSION))
 
 DB_DSN = env.str('DB_DSN', default='')
 

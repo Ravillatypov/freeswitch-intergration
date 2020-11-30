@@ -1,7 +1,6 @@
 from .amqp_events import AMQPService
-from .upload import UploadService
 from .convert import ConvertService
-
+from .upload import UploadService
 
 services = [
     AMQPService(),
@@ -10,4 +9,3 @@ services = [
 ]
 
 __all__ = ['services']
-
